@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import matplotlib.pyplot as plt
 
 def calc_tridiagonal(length, diff):
     A = np.zeros((length, length))
@@ -69,8 +70,18 @@ class Trazador_cubico:
         y = self.res[i] + self.b[i] * dx + self.c[i] * dx ** 2.0 + self.d[i] * dx ** 3.0
         return y
 
-def test():
+def test(doPlot):
     temp=[0,8,16,24,32,40]
     o=[14.621,11.843,9.870,8.418,7.305,6.413]
     trazador = Trazador_cubico(temp[-3:], o[-3:])
     print(trazador.calc(27), '\nValor real en el lab: 7.986\nValor obtenido con trazadores cúbicos usado en el lab: 8.043433400856753')
+    if doPlot:
+        plt.plot(temp[-3:], o[-3:], "xb")
+        x = np.arange(temp[-3], temp[-1], 0.1) # 0.1 para que se vea bien pegado al último punto
+        plt.plot(x, [trazador.calc(i) for i in x], "r")
+        plt.axis("equal")
+        plt.xlabel("s(x)")
+        plt.ylabel("s(y)")
+        plt.show()
+
+# test(True)
