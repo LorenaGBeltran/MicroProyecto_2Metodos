@@ -13,6 +13,10 @@ from PIL import Image
 from scipy.ndimage import gaussian_filter
 import  skimage.morphology as morf
 from skimage.filters import threshold_local, threshold_mean, threshold_niblack,threshold_sauvola
+from rdp import rdp 
+from collections import Counter 
+
+
 
 I = plt.imread('MinR.png')
 Igray= I.mean(axis=2)
@@ -172,4 +176,23 @@ plt.figure()
 plt.imshow(components )
 plt.show()
 
+#esta en la cual cada entrada tendrá una lista
+#de parejas ordenas que seran los componentes de la imagen 
+superList=[]
+for i in range(1, len(np.unique(components))):
+    lista=[]
+    for j in range (0, components.shape[0]):
+        for k in range (0, components.shape[1]):
+            if components[j,k]==i:
+                lista.append([j,k])
+    superList.append(lista)
+superListrdp=[]
+for i in range(0, len(superList)):
+    if len(superList[i])<=2:
+        superListrdp.append(superList[i])
+    if len(superList[i])>2: 
+        x= superList[i]
+        arr1=rdp(x, epsilon=0.6)
+        superListrdp.append(arr1)
+        
 
