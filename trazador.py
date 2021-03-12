@@ -3,11 +3,13 @@ import copy
 import matplotlib.pyplot as plt
 
 def calc_tridiagonal(length, diff):
+    # diff = h_i
     A = np.zeros((length, length))
     A[0, 0] = 1.0
     for i in range(length - 1):
         if i != (length - 2):
-            A[i + 1, i + 1] = 2.0 * (diff[i] + diff[i + 1])
+            A[i + 1, i + 1] = 2.0 * (diff[i] + diff[i + 1]) # Diagonal de v_i
+        # Adyacentes con h_i
         A[i + 1, i] = diff[i]
         A[i, i + 1] = diff[i]
 
@@ -20,6 +22,7 @@ def calc_tridiagonal(length, diff):
 def calc_resultados(length, res, diff):
     B = np.zeros(length)
     for i in range(length - 2):
+        # u_i
         B[i + 1] = 3.0 * (res[i + 2] - res[i + 1]) / \
                 diff[i + 1] - 3.0 * (res[i + 1] - res[i]) / diff[i]
     #print(B)
