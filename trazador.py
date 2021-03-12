@@ -1,4 +1,3 @@
-import bisect
 import numpy as np
 import copy
 
@@ -14,7 +13,7 @@ def calc_tridiagonal(length, diff):
     A[0, 1] = 0.0
     A[length - 1, length - 2] = 0.0
     A[length - 1, length - 1] = 1.0
-    print(A)
+    #print(A)
     return A
 
 def calc_resultados(length, res, diff):
@@ -22,7 +21,7 @@ def calc_resultados(length, res, diff):
     for i in range(length - 2):
         B[i + 1] = 3.0 * (res[i + 2] - res[i + 1]) / \
                 diff[i + 1] - 3.0 * (res[i + 1] - res[i]) / diff[i]
-    print(B)
+    #print(B)
     return B
     
 
@@ -46,8 +45,32 @@ class Trazador_cubico:
         A = calc_tridiagonal(self.length, diff)
         B = calc_resultados(self.length, self.res, diff)
         self.c = np.matmul(np.linalg.inv(A),B)
-        print(self.c)
-        
-temp=[0,8,16,24,32,40]
-o=[14.621,11.843,9.870,8.418,7.305,6.413]
-trazador = Trazador_cubico(temp[-4:], o[-4:])
+        #print(self.c)
+
+        # Encontramos b y d del trazador
+        for i in range(self.length - 1):
+            self.d.append((self.c[i + 1] - self.c[i]) / (3.0 * diff[i]))
+            tb = (self.res[i + 1] - self.res[i]) / diff[i] - diff[i] * \
+                 (self.c[i + 1] + 2.0 * self.c[i]) / 3.0
+            self.b.append(tb)
+        #print(self.b)
+        #print(self.d)
+
+    # Encuentra y(t); si t es más pequeño o mayor a los valores en x, return None
+    def calc(self, t):
+
+        if t < self.x[0]:
+            return None
+        elif t > self.x[-1]:
+            return None
+
+        i = [j - 1 for j in range(self.length) if self.x[j] - t > 0][0]
+        dx = t - self.x[i]
+        y = self.res[i] + self.b[i] * dx + self.c[i] * dx ** 2.0 + self.d[i] * dx ** 3.0
+        return y
+
+def test():
+    temp=[0,8,16,24,32,40]
+    o=[14.621,11.843,9.870,8.418,7.305,6.413]
+    trazador = Trazador_cubico(temp[-3:], o[-3:])
+    print(trazador.calc(27), '\nValor real en el lab: 7.986\nValor obtenido con trazadores cúbicos usado en el lab: 8.043433400856753')
