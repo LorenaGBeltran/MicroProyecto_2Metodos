@@ -80,8 +80,6 @@ def test(doPlot):
         x = np.arange(temp[-3], temp[-1], 0.1) # 0.1 para que se vea bien pegado al último punto
         plt.plot(x, [trazador.calc(i) for i in x], "r")
         plt.axis("equal")
-        plt.xlabel("s(x)")
-        plt.ylabel("s(y)")
         plt.show()
 
 # test(True)
